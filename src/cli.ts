@@ -67,7 +67,7 @@ function parseAgents(value: string): SkillAgent[] {
 program
   .name("skilllock")
   .description("Reproducible lockfiles, verification, diff, audit, and tests for Agent Skills")
-  .version("1.0.0");
+  .version("1.0.1");
 
 program
   .command("init")

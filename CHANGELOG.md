@@ -2,6 +2,12 @@
 
 All notable changes to skilllock are documented here.
 
+## 1.0.1 — 2026-05-30
+
+### Fixed
+
+- GitHub Action builds from source before `npm install -g` (fixes CI exit code 127 when `dist/` is not in git)
+
 ## 1.0.0 — 2026-05-30
 
 First stable release of the Agent Skills lock / verify / reproduce layer.

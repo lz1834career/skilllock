@@ -30,6 +30,7 @@ jobs:
 | `fail-on-audit` | `warning` | Audit fail level |
 | `skip-audit` | `false` | Skip audit in check |
 | `skip-tests` | `false` | Skip tests in check |
+| `skip-validate` | `false` | Skip SKILL.md validation in check |
 | `llm` | `false` | Run LLM golden tests |
 | `apply-upgrades` | `false` | `upgrade --apply` |
 | `reproduce` | `false` | `upgrade --apply --reproduce` |

@@ -34,6 +34,10 @@ inputs:
     description: Skip contract tests when command is check
     required: false
     default: "false"
+  skip-validate:
+    description: Skip SKILL.md validation when command is check
+    required: false
+    default: "false"
   llm:
     description: Run LLM golden tests (check/test commands)
     required: false
@@ -65,7 +69,11 @@ runs:
 
     - name: Install skilllock
       shell: bash
-      run: npm install -g "${{ github.action_path }}/.."
+      run: |
+        cd "${{ github.action_path }}/.."
+        npm ci
+        npm run build
+        npm install -g .
 
     - name: Run skilllock
       shell: bash
@@ -91,6 +99,7 @@ runs:
           check)
             [ "${{ inputs.skip-audit }}" = "true" ] && ARGS+=(--skip-audit)
             [ "${{ inputs.skip-tests }}" = "true" ] && ARGS+=(--skip-tests)
+            [ "${{ inputs.skip-validate }}" = "true" ] && ARGS+=(--skip-validate)
             [ "${{ inputs.llm }}" = "true" ] && ARGS+=(--llm)
             skilllock check "${ARGS[@]}"
             ;;

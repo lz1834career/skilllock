@@ -6,12 +6,28 @@ on:
     branches: [main]
 
 jobs:
-  check:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
 
-      - uses: lz1834career/skilllock/action@v1.0.0
+  action-smoke:
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./action
         with:
           command: check
+          project: examples/demo-project
           skip-tests: "true"
+          skip-audit: "true"
+          skip-validate: "true"
