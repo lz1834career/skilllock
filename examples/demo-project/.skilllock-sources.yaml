@@ -1,0 +1,10 @@
+version: 1
+mappings:
+  - skill: demo-skill
+    source:
+      type: manual
+      ref: ./vendor/demo-skill
+  - skill: helper-skill
+    source:
+      type: manual
+      ref: ./vendor/helper-skill

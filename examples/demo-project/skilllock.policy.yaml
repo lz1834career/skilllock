@@ -1,0 +1,17 @@
+version: 1
+audit:
+  failOn: warning
+  denyRules:
+    - hidden-instruction
+    - unicode-obfuscation
+  denySkills: []
+compatibility:
+  enforce: true
+context:
+  allowedKinds: [mcp, rule, agents-md, instructions]
+lockfile:
+  requireSources: false
+drift:
+  failOn: true
+untracked:
+  failOn: true

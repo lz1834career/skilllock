@@ -1,0 +1,54 @@
+{
+  "name": "skilllock",
+  "version": "1.0.0",
+  "description": "Reproducible lockfiles, verification, diff, audit, and tests for Agent Skills",
+  "type": "module",
+  "bin": {
+    "skilllock": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "action",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "keywords": [
+    "agent-skills",
+    "cursor",
+    "claude",
+    "lockfile",
+    "supply-chain",
+    "reproducible",
+    "cli",
+    "mcp",
+    "devops"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "fast-glob": "^3.3.3",
+    "picocolors": "^1.1.1",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  }
+}

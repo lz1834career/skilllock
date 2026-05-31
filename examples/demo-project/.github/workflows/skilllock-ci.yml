@@ -1,0 +1,36 @@
+name: skilllock-ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  skilllock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Monorepo: install skilllock from repo root
+      - name: Install skilllock
+        working-directory: ../..
+        run: npm install -g .
+
+      - name: Check agent context
+        run: skilllock check --skip-tests
+        working-directory: examples/demo-project
+
+      - name: Explain (JSON artifact)
+        if: failure()
+        run: skilllock explain --json > explain.json
+        working-directory: examples/demo-project
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: skilllock-explain
+          path: examples/demo-project/explain.json

@@ -1,0 +1,53 @@
+# skilllock GitHub Action
+
+Run [skilllock](https://www.npmjs.com/package/skilllock) in CI: verify, check, audit, drift, test, outdated, upgrade.
+
+## Usage
+
+```yaml
+name: skilllock
+on: [pull_request, push]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: YOUR_ORG/skilllock/action@v1
+        with:
+          command: check
+```
+
+## Inputs
+
+| Input | Default | Description |
+|-------|---------|-------------|
+| `command` | `check` | `check`, `verify`, `audit`, `drift`, `test`, `validate`, `outdated`, `upgrade`, `explain` |
+| `project` | `.` | Project root |
+| `lockfile` | | Lockfile path |
+| `policy` | | Policy file path |
+| `tests` | | Tests file path |
+| `fail-on-audit` | `warning` | Audit fail level |
+| `skip-audit` | `false` | Skip audit in check |
+| `skip-tests` | `false` | Skip tests in check |
+| `llm` | `false` | Run LLM golden tests |
+| `apply-upgrades` | `false` | `upgrade --apply` |
+| `reproduce` | `false` | `upgrade --apply --reproduce` |
+| `run-check` | `false` | `upgrade --apply --check` |
+| `node-version` | `20` | Node.js version |
+
+## Upgrade automation
+
+```yaml
+- uses: YOUR_ORG/skilllock/action@v1
+  with:
+    command: upgrade
+    apply-upgrades: "true"
+    reproduce: "true"
+    run-check: "true"
+```
+
+## Requirements
+
+- Node.js 20+
+- Project must contain `skills.lock.yaml` (run `skilllock init` && `skilllock lock` locally first)

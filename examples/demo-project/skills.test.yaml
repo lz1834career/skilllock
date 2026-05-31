@@ -1,0 +1,6 @@
+version: 1
+tests:
+  - skill: demo-skill
+    expectDescriptionContains: ["skilllock examples"]
+    expectSkillMdContains: ["Follow these steps"]
+    expectDependencies: [helper-skill]

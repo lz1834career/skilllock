@@ -1,0 +1,39 @@
+name: skilllock-auto-upgrade
+
+on:
+  schedule:
+    - cron: "0 10 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install skilllock
+        run: npm install -g .
+
+      - name: Preview upgrades
+        run: skilllock upgrade --json
+
+      - name: Apply upgrades
+        run: skilllock upgrade --apply --reproduce --check
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore(skilllock): refresh agent skill sources"
+          body: |
+            Automated source bumps via `skilllock upgrade --apply --reproduce --check`.
+            Review changelogs before merging.
+          branch: skilllock/auto-upgrade
+          commit-message: "chore(skilllock): bump agent skill sources"

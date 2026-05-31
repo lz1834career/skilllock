@@ -1,0 +1,120 @@
+name: skilllock
+description: Run skilllock verify, check, audit, drift, or test in CI
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  command:
+    description: skilllock command (check, verify, audit, drift, test, validate, outdated, upgrade)
+    required: false
+    default: check
+  project:
+    description: Project root relative to repository root
+    required: false
+    default: .
+  lockfile:
+    description: Lockfile path (optional)
+    required: false
+  policy:
+    description: Policy file path (optional)
+    required: false
+  tests:
+    description: Tests file path (optional)
+    required: false
+  fail-on-audit:
+    description: Audit fail level for audit command (warning, error, info)
+    required: false
+    default: warning
+  skip-audit:
+    description: Skip audit when command is check
+    required: false
+    default: "false"
+  skip-tests:
+    description: Skip contract tests when command is check
+    required: false
+    default: "false"
+  llm:
+    description: Run LLM golden tests (check/test commands)
+    required: false
+    default: "false"
+  apply-upgrades:
+    description: For upgrade command, apply source bumps
+    required: false
+    default: "false"
+  reproduce:
+    description: For upgrade --apply, run reproduce after bump
+    required: false
+    default: "false"
+  run-check:
+    description: For upgrade --apply, run check after apply
+    required: false
+    default: "false"
+  node-version:
+    description: Node.js version
+    required: false
+    default: "20"
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install skilllock
+      shell: bash
+      run: npm install -g "${{ github.action_path }}/.."
+
+    - name: Run skilllock
+      shell: bash
+      env:
+        SKILLLOCK_LLM_API_KEY: ${{ env.SKILLLOCK_LLM_API_KEY }}
+        OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+      run: |
+        set -euo pipefail
+        CMD="${{ inputs.command }}"
+        ARGS=(--project "${{ inputs.project }}")
+
+        if [ -n "${{ inputs.lockfile }}" ]; then
+          ARGS+=(--lockfile "${{ inputs.lockfile }}")
+        fi
+        if [ -n "${{ inputs.policy }}" ]; then
+          ARGS+=(--policy "${{ inputs.policy }}")
+        fi
+        if [ -n "${{ inputs.tests }}" ]; then
+          ARGS+=(--tests "${{ inputs.tests }}")
+        fi
+
+        case "$CMD" in
+          check)
+            [ "${{ inputs.skip-audit }}" = "true" ] && ARGS+=(--skip-audit)
+            [ "${{ inputs.skip-tests }}" = "true" ] && ARGS+=(--skip-tests)
+            [ "${{ inputs.llm }}" = "true" ] && ARGS+=(--llm)
+            skilllock check "${ARGS[@]}"
+            ;;
+          audit)
+            skilllock audit "${ARGS[@]}" --fail-on "${{ inputs.fail-on-audit }}"
+            ;;
+          test)
+            [ "${{ inputs.llm }}" = "true" ] && ARGS+=(--llm)
+            skilllock test "${ARGS[@]}"
+            ;;
+          outdated)
+            skilllock outdated "${ARGS[@]}"
+            ;;
+          upgrade)
+            [ "${{ inputs.apply-upgrades }}" = "true" ] && ARGS+=(--apply)
+            [ "${{ inputs.reproduce }}" = "true" ] && ARGS+=(--reproduce)
+            [ "${{ inputs.run-check }}" = "true" ] && ARGS+=(--check)
+            skilllock upgrade "${ARGS[@]}"
+            ;;
+          verify|drift|validate|explain)
+            skilllock "$CMD" "${ARGS[@]}"
+            ;;
+          *)
+            echo "Unsupported command: $CMD" >&2
+            exit 1
+            ;;
+        esac

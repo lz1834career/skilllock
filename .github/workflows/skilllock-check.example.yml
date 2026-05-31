@@ -1,0 +1,16 @@
+name: skilllock-check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  skilllock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./action
+        with:
+          command: check
+          skip-tests: "false"
