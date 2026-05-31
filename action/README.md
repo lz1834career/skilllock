@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: lz1834career/skilllock/action@v1
+      - uses: lz1834career/skilllock/action@v1.1.0
         with:
           command: check
 ```
@@ -40,7 +40,7 @@ jobs:
 ## Upgrade automation
 
 ```yaml
-- uses: lz1834career/skilllock/action@v1
+- uses: lz1834career/skilllock/action@v1.1.0
   with:
     command: upgrade
     apply-upgrades: "true"

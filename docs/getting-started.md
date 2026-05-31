@@ -2,16 +2,18 @@
 
 ## 安装
 
+推荐通过 npm（[skilllock@1.1.0](https://www.npmjs.com/package/skilllock)）：
+
 ```bash
 npm install -D skilllock
 npx skilllock --help
 ```
 
-未发布前可在 monorepo 根目录：
+无需安装到项目时：
 
 ```bash
-npm install -g .
-skilllock --version
+npx skilllock@1.1.0 init
+npx skilllock@1.1.0 lock
 ```
 
 ## 五分钟工作流
@@ -38,6 +40,7 @@ skilllock check
 ```bash
 git clone <repo>
 cd project
+npm install   # 若 skilllock 在 devDependencies
 skilllock reproduce
 skilllock verify
 ```
@@ -47,7 +50,7 @@ skilllock verify
 ## GitHub Action
 
 ```yaml
-- uses: lz1834career/skilllock/action@v1
+- uses: lz1834career/skilllock/action@v1.1.0
   with:
     command: check
 ```
@@ -66,6 +69,17 @@ untracked:
 audit:
   failOn: warning
   denyRules: [hidden-instruction, unicode-obfuscation]
+```
+
+## 从源码开发 skilllock
+
+```bash
+git clone https://github.com/lz1834career/skilllock.git
+cd skilllock
+npm ci
+npm run build
+npm install -g .
+skilllock --version
 ```
 
 ## 下一步

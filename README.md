@@ -4,7 +4,7 @@ Reproducible lockfiles, verification, diff, security audit, and contract tests f
 
 APM、Vercel `skills`、skillpm 解决 **怎么装**；skilllock 解决 **装完之后怎么锁、怎么验、怎么 diff、怎么审计、怎么测、怎么复现、怎么升级**。
 
-**v1.1.0** — 已开源：[github.com/lz1834career/skilllock](https://github.com/lz1834career/skilllock) · CI 已通过 · npm 待发布（见 [RELEASING.md](./RELEASING.md)）。
+**v1.1.0** — [npm](https://www.npmjs.com/package/skilllock) · [GitHub](https://github.com/lz1834career/skilllock) · CI 已通过
 
 ## 文档
 
@@ -15,7 +15,7 @@ APM、Vercel `skills`、skillpm 解决 **怎么装**；skilllock 解决 **装完
 | [docs/ecosystem.md](./docs/ecosystem.md) | 与 APM / skills / skillpm / sklock 的分工 |
 | [examples/demo-project](./examples/demo-project/README.md) | 可运行示例 |
 | [action/README.md](./action/README.md) | GitHub Action 用法 |
-| [RELEASING.md](./RELEASING.md) | npm / Action 发布 checklist |
+| [RELEASING.md](./RELEASING.md) | 版本发布 checklist |
 | [CHANGELOG.md](./CHANGELOG.md) | 版本历史 |
 
 ## Install
@@ -27,13 +27,10 @@ npx skilllock lock
 npx skilllock check
 ```
 
-未发布 npm 前，在 skilllock 仓库根目录：
+或一次性运行（无需写入 `package.json`）：
 
 ```bash
-npm run build
-npm install -g .
-# 或
-node dist/cli.js check --project examples/demo-project
+npx skilllock@1.1.0 init
 ```
 
 ## Quick workflow
@@ -44,13 +41,13 @@ skilllock import          # optional: merge apm.yml / package.json sources
 skilllock lock --snapshot # optional: offline snapshots
 skilllock check           # CI gate
 skilllock reproduce       # fresh clone / new machine
-skilllock graph           # Mermaid 依赖图（v1.1+）
+skilllock graph           # Mermaid 依赖图
 ```
 
 ## GitHub Action
 
 ```yaml
-- uses: lz1834career/skilllock/action@v1.0.1
+- uses: lz1834career/skilllock/action@v1.1.0
   with:
     command: check
 ```
@@ -78,6 +75,16 @@ context:
   - kind: mcp
     name: mcp.json
     files: [...]
+```
+
+## 从源码开发（贡献者）
+
+```bash
+git clone https://github.com/lz1834career/skilllock.git
+cd skilllock
+npm ci
+npm run build
+node dist/cli.js check --project examples/demo-project
 ```
 
 ## License

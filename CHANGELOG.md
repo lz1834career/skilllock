@@ -11,6 +11,7 @@ All notable changes to skilllock are documented here.
 ### Changed
 
 - README and ecosystem docs: sklock comparison, layout model (flat + metadata deps), roadmap
+- Published to [npm](https://www.npmjs.com/package/skilllock) as `skilllock@1.1.0`
 
 ## 1.0.1 — 2026-05-30
 

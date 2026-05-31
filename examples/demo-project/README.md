@@ -37,4 +37,4 @@ npx skilllock why demo-skill
 
 ## CI
 
-`.github/workflows/skilllock-ci.yml` 演示 PR 上使用 `./action`（monorepo）或发布后 `lz1834career/skilllock/action@v1`。
+`.github/workflows/skilllock-ci.yml` 演示 monorepo 本地安装；独立项目可用 `lz1834career/skilllock/action@v1.1.0` 或 `npm install -D skilllock`。
