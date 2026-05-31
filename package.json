@@ -34,6 +34,14 @@
     "devops"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lz1834career/skilllock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lz1834career/skilllock/issues"
+  },
+  "homepage": "https://github.com/lz1834career/skilllock#readme",
   "engines": {
     "node": ">=20"
   },

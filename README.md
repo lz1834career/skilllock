@@ -4,7 +4,7 @@ Reproducible lockfiles, verification, diff, security audit, and contract tests f
 
 APM、Vercel `skills`、skillpm 解决 **怎么装**；skilllock 解决 **装完之后怎么锁、怎么验、怎么 diff、怎么审计、怎么测、怎么复现、怎么升级**。
 
-**v1.0.0** — 功能完整，[发布步骤见 RELEASING.md](./RELEASING.md)（尚未推 npm）。
+**v1.0.0** — 已开源：[github.com/lz1834career/skilllock](https://github.com/lz1834career/skilllock)（npm 待发布，见 [RELEASING.md](./RELEASING.md)）。
 
 ## 文档
 
@@ -40,7 +40,7 @@ skilllock reproduce       # fresh clone / new machine
 ## GitHub Action
 
 ```yaml
-- uses: YOUR_ORG/skilllock/action@v1
+- uses: lz1834career/skilllock/action@v1
   with:
     command: check
 ```

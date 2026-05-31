@@ -47,7 +47,7 @@ skilllock verify
 ## GitHub Action
 
 ```yaml
-- uses: YOUR_ORG/skilllock/action@v1
+- uses: lz1834career/skilllock/action@v1
   with:
     command: check
 ```

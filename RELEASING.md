@@ -9,10 +9,10 @@
 ```json
 "repository": {
   "type": "git",
-  "url": "git+https://github.com/YOUR_ORG/skilllock.git"
+  "url": "git+https://github.com/lz1834career/skilllock.git"
 },
-"bugs": { "url": "https://github.com/YOUR_ORG/skilllock/issues" },
-"homepage": "https://github.com/YOUR_ORG/skilllock#readme"
+"bugs": { "url": "https://github.com/lz1834career/skilllock/issues" },
+"homepage": "https://github.com/lz1834career/skilllock#readme"
 ```
 
 ## 2. 本地验证
@@ -50,7 +50,7 @@ npx skilllock init
 Action 位于 `action/action.yml`。用户仓库引用方式：
 
 ```yaml
-- uses: YOUR_ORG/skilllock/action@v1
+- uses: lz1834career/skilllock/action@v1
   with:
     command: check
 ```
