@@ -2,6 +2,16 @@
 
 All notable changes to skilllock are documented here.
 
+## 1.1.0 — 2026-05-30
+
+### Added
+
+- `graph` command: Mermaid flowchart for declared skill dependencies (`--ascii` for text tree)
+
+### Changed
+
+- README and ecosystem docs: sklock comparison, layout model (flat + metadata deps), roadmap
+
 ## 1.0.1 — 2026-05-30
 
 ### Fixed

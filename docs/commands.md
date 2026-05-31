@@ -51,6 +51,7 @@
 | 命令 | 说明 |
 |------|------|
 | `tree` | 依赖树 |
+| `graph` | Mermaid 依赖图（`--ascii` 同 tree） |
 | `why <skill>` | skill 来源与依赖关系 |
 | `untracked` | 磁盘上有但未进 lock 的 skills |
 

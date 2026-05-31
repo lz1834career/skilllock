@@ -31,6 +31,7 @@ node dist/cli.js check --project examples/demo-project --skip-tests
 cd examples/demo-project
 npx skilllock check
 npx skilllock tree
+npx skilllock graph
 npx skilllock why demo-skill
 ```
 

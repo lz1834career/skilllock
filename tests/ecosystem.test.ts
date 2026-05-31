@@ -6,6 +6,7 @@ import { runProjectCheck } from "../src/core/check.js";
 import { buildLockfile, writeLockfile } from "../src/core/lockfile.js";
 import { clearCache, storeSkillInCache, listCacheEntries } from "../src/core/reproduce/cache.js";
 import { buildSkillForest, formatSkillTree } from "../src/core/tree.js";
+import { collectDependencyEdges, formatMermaidGraph, mermaidNodeId } from "../src/core/graph.js";
 import { explainSkill } from "../src/core/why.js";
 import { findUntrackedSkills } from "../src/core/untracked.js";
 import { buildUpgradePlan } from "../src/core/upgrade.js";
@@ -75,6 +76,19 @@ description: not locked
     const untracked = await findUntrackedSkills(projectRoot, tempRoot, lock);
     expect(untracked.map((entry) => entry.skill.name)).toContain("rogue-skill");
     expect(untracked.map((entry) => entry.skill.name)).not.toContain("parent-skill");
+  });
+});
+
+describe("graph", () => {
+  it("renders Mermaid edges for declared dependencies", async () => {
+    const lock = await buildLockfile(projectRoot, tempRoot, { includeContext: false });
+    const edges = collectDependencyEdges(lock);
+    expect(edges).toEqual([{ from: "parent-skill", to: "child-skill" }]);
+
+    const mermaid = formatMermaidGraph(lock);
+    expect(mermaid).toContain("flowchart TD");
+    expect(mermaid).toContain(`${mermaidNodeId("parent-skill")} --> ${mermaidNodeId("child-skill")}`);
+    expect(mermaid).toContain("parent-skill (cursor/project)");
   });
 });
 

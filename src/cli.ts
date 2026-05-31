@@ -30,6 +30,7 @@ import {
 import { createSnapshotsFromDisk } from "./core/reproduce/snapshot.js";
 import { listCacheEntries, clearCache, cacheStats } from "./core/reproduce/cache.js";
 import { buildSkillForest, formatSkillTree } from "./core/tree.js";
+import { formatMermaidGraph } from "./core/graph.js";
 import { explainSkill } from "./core/why.js";
 import { findUntrackedSkills } from "./core/untracked.js";
 import { checkOutdatedSkills, summarizeOutdated } from "./core/outdated.js";
@@ -67,7 +68,7 @@ function parseAgents(value: string): SkillAgent[] {
 program
   .name("skilllock")
   .description("Reproducible lockfiles, verification, diff, audit, and tests for Agent Skills")
-  .version("1.0.1");
+  .version("1.1.0");
 
 program
   .command("init")
@@ -735,6 +736,32 @@ program
     for (const line of formatSkillTree(forest)) {
       console.log(line);
     }
+  });
+
+program
+  .command("graph")
+  .description("Render skill dependency graph as Mermaid flowchart")
+  .option("--project <dir>", "Project root", process.cwd())
+  .option("--lockfile <file>", "Lockfile path")
+  .option("--ascii", "Output ASCII tree instead of Mermaid")
+  .action(async (options: { project: string; lockfile?: string; ascii?: boolean }) => {
+    const projectRoot = resolveProjectRoot(options.project);
+    const lock = await readLockfile(resolveLockfilePath(projectRoot, options.lockfile));
+
+    if (lock.skills.length === 0) {
+      console.log(pc.yellow("No skills in lockfile"));
+      return;
+    }
+
+    if (options.ascii) {
+      const forest = buildSkillForest(lock);
+      for (const line of formatSkillTree(forest)) {
+        console.log(line);
+      }
+      return;
+    }
+
+    console.log(formatMermaidGraph(lock));
   });
 
 program

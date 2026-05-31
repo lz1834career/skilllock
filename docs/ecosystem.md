@@ -35,6 +35,39 @@ CI：    skilllock check
 - **不是** package registry（不托管 skill 包）
 - **不是** 安装器的替代品
 - **不** 自动审查 changelog 或合并 PR（只提供工作流模板）
+- **不** 扫描 filesystem 嵌套的 `skills/*/skills/*`（见下方与 sklock 对比）
+
+## 与 sklock 的差异与选型
+
+[sklock](https://github.com/artieax/sklock) 是与 skilllock 最接近的 lockfile 工具。两者重叠约 40%，定位不同：
+
+| 维度 | skilllock | sklock |
+|------|-----------|--------|
+| Skill 布局 | 平铺 `.cursor/skills/<name>/` | 支持目录嵌套 sub-skills |
+| 依赖模型 | `metadata.skilllock.dependencies` | `requires[]` + closureHash |
+| 核心强项 | reproduce、audit、context lock、CI Action、upgrade | graph、lint、infer requires、嵌套 closure |
+| 可视化 | `tree`（文本）、`graph`（Mermaid） | `tree`、`graph --mermaid` |
+
+**选 skilllock 如果**：你需要 supply-chain 治理（verify/check/reproduce/audit/SBOM）、MCP 与 Rules 进同一把锁、GitHub Action 门禁、source 升级自动化。
+
+**选 sklock 如果**：你的 skill 仓库是嵌套目录树，需要 closureHash 或 infer/lint 等编写期工具。
+
+**推荐组合**（不互斥）：
+
+```text
+skillpm / skills / apm  →  安装
+skilllock lock/check    →  CI 与复现
+sklock                  →  仅当团队已标准化嵌套 skill 目录时二选一，勿重复 lock
+```
+
+## 路线图（简要）
+
+| 版本 | 重点 |
+|------|------|
+| v1.0.x | lock/verify/check、Action、跨平台 hash |
+| v1.1 | `graph` Mermaid 依赖图 |
+| v1.2+ | 按需：嵌套 discover + closureHash |
+| 暂缓 | `infer requires`（误推断风险，仅 dry-run 再考虑） |
 
 ## 覆盖度（主观估计）
 

@@ -1,6 +1,6 @@
 {
   "name": "skilllock",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Reproducible lockfiles, verification, diff, audit, and tests for Agent Skills",
   "type": "module",
   "bin": {
