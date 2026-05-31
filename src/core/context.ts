@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import fg from "fast-glob";
-import { hashBuffer, toPosixPath } from "./discover.js";
+import { lockedFileFingerprint, toPosixPath } from "./discover.js";
 import type {
   ContextDiscoveryTarget,
   ContextKind,
@@ -22,10 +22,11 @@ async function hashFilesAtRoot(root: string, patterns: string[]): Promise<Locked
   for (const relativePath of relativePaths.sort()) {
     const absolutePath = path.join(root, relativePath);
     const buffer = await readFile(absolutePath);
+    const fingerprint = lockedFileFingerprint(buffer);
     files.push({
       path: relativePath.split(path.sep).join("/"),
-      hash: hashBuffer(buffer),
-      size: buffer.byteLength,
+      hash: fingerprint.hash,
+      size: fingerprint.size,
     });
   }
   return files;
@@ -36,6 +37,7 @@ async function discoverSingleFileContext(
 ): Promise<DiscoveredContext | null> {
   try {
     const buffer = await readFile(target.filePath);
+    const fingerprint = lockedFileFingerprint(buffer);
     return {
       id: `${target.agent}:${target.scope}:${target.kind}:${target.name}`,
       kind: target.kind,
@@ -46,8 +48,8 @@ async function discoverSingleFileContext(
       files: [
         {
           path: path.basename(target.filePath),
-          hash: hashBuffer(buffer),
-          size: buffer.byteLength,
+          hash: fingerprint.hash,
+          size: fingerprint.size,
         },
       ],
     };

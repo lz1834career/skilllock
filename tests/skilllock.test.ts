@@ -180,3 +180,12 @@ describe("audit", () => {
     expect(findings.some((finding) => finding.rule === "unicode-obfuscation")).toBe(true);
   });
 });
+
+describe("lockedFileFingerprint", () => {
+  it("hashes CRLF and LF content identically", async () => {
+    const { lockedFileFingerprint } = await import("../src/core/discover.js");
+    const lf = Buffer.from("line one\nline two\n", "utf8");
+    const crlf = Buffer.from("line one\r\nline two\r\n", "utf8");
+    expect(lockedFileFingerprint(crlf)).toEqual(lockedFileFingerprint(lf));
+  });
+});

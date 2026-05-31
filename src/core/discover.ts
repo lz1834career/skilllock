@@ -16,8 +16,24 @@ function normalizeRelativePath(root: string, filePath: string): string {
   return path.relative(root, filePath).split(path.sep).join("/");
 }
 
+/** Normalize CRLF to LF before hashing so lockfiles match across Windows and Unix checkouts. */
+export function normalizeLineEndingsForHash(buffer: Buffer): Buffer {
+  if (!buffer.includes(0x0d)) {
+    return buffer;
+  }
+  return Buffer.from(buffer.toString("utf8").replace(/\r\n/g, "\n"), "utf8");
+}
+
+export function lockedFileFingerprint(buffer: Buffer): { hash: string; size: number } {
+  const normalized = normalizeLineEndingsForHash(buffer);
+  return {
+    hash: `sha256:${createHash("sha256").update(normalized).digest("hex")}`,
+    size: normalized.byteLength,
+  };
+}
+
 export function hashBuffer(buffer: Buffer): string {
-  return `sha256:${createHash("sha256").update(buffer).digest("hex")}`;
+  return lockedFileFingerprint(buffer).hash;
 }
 
 export function sha256Hex(buffer: Buffer): string {
@@ -106,10 +122,11 @@ async function discoverSkillAtRoot(
   for (const relativePath of relativePaths.sort()) {
     const absolutePath = path.join(skillRoot, relativePath);
     const buffer = await readFile(absolutePath);
+    const fingerprint = lockedFileFingerprint(buffer);
     files.push({
       path: normalizeRelativePath(skillRoot, absolutePath),
-      hash: hashBuffer(buffer),
-      size: buffer.byteLength,
+      hash: fingerprint.hash,
+      size: fingerprint.size,
     });
   }
 

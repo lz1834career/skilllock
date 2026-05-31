@@ -7,6 +7,8 @@ All notable changes to skilllock are documented here.
 ### Fixed
 
 - GitHub Action builds from source before `npm install -g` (fixes CI exit code 127 when `dist/` is not in git)
+- Hash CRLF and LF text files identically so lockfiles verify on Linux CI after Windows lock generation
+- Demo project lockfile uses portable `projectRoot: .` and LF-normalized hashes
 
 ## 1.0.0 — 2026-05-30
 
