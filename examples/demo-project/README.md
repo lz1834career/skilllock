@@ -1,22 +1,22 @@
 # skilllock demo project
 
-最小可运行示例：展示 init → lock → check → reproduce 工作流。
+Minimal runnable example: init → lock → check → reproduce.
 
-## 结构
+## Layout
 
 ```
 examples/demo-project/
-├── .cursor/skills/          # 已安装的 skills
+├── .cursor/skills/          # installed skills
 ├── skills.lock.yaml         # lockfile v2
 ├── skilllock.policy.yaml
 ├── skills.test.yaml
 ├── .skilllock-sources.yaml
-└── .github/workflows/       # CI 示例
+└── .github/workflows/       # CI example
 ```
 
-## 本地试用
+## Try locally
 
-在仓库根目录：
+From the repository root:
 
 ```bash
 npm run build
@@ -25,7 +25,7 @@ node dist/cli.js lock --project examples/demo-project
 node dist/cli.js check --project examples/demo-project --skip-tests
 ```
 
-或在 demo 目录（安装 skilllock 后）：
+From the demo directory (with skilllock installed):
 
 ```bash
 cd examples/demo-project
@@ -37,4 +37,4 @@ npx skilllock why demo-skill
 
 ## CI
 
-`.github/workflows/skilllock-ci.yml` 演示 monorepo 本地安装；独立项目可用 `lz1834career/skilllock/action@v1.1.0` 或 `npm install -D skilllock`。
+`.github/workflows/skilllock-ci.yml` shows monorepo install from source. Standalone repos can use `lz1834career/skilllock/action@v1.1.0` or `npm install -D skilllock`.

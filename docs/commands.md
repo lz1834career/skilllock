@@ -1,80 +1,80 @@
-# 命令参考
+# Command reference
 
-## 项目初始化
+## Project setup
 
-| 命令 | 说明 |
-|------|------|
-| `init` | 生成 policy、tests、sources、gitignore、CI 工作流模板 |
-| `import` | 从 `apm.yml` / `package.json` 导入 source 映射 |
-| `scan` | 列出已发现的 skills |
+| Command | Description |
+|---------|-------------|
+| `init` | Scaffold policy, tests, sources, gitignore, workflow templates |
+| `import` | Import source mappings from `apm.yml` / `package.json` |
+| `scan` | List discovered skills |
 
-常用选项：`--agents cursor,claude`、`--global`
+Common options: `--agents cursor,claude`, `--global`
 
-## Lock 与校验
+## Lock and verification
 
-| 命令 | 说明 |
-|------|------|
-| `lock` | 生成 `skills.lock.yaml` |
-| `verify` | 校验磁盘内容与 lock 一致 |
+| Command | Description |
+|---------|-------------|
+| `lock` | Generate `skills.lock.yaml` |
+| `verify` | Verify on-disk content matches the lock |
 | `check` | verify + validate + audit + test + policy + drift + untracked |
-| `validate` | SKILL.md 格式与 lock 结构 |
-| `drift` | lock vs 重新 lock 的差异（不写入） |
-| `diff` | 两个 lock 或 lock vs 磁盘 |
-| `explain` | 问题说明 + 修复建议（`--json` 供 CI） |
+| `validate` | SKILL.md format and lock structure |
+| `drift` | Diff lock vs re-lock (no write) |
+| `diff` | Compare two locks or lock vs disk |
+| `explain` | Issue details and fix hints (`--json` for CI) |
 
-`lock` 选项：`--snapshot`、`--global`、`--no-context`、`--agents`
+`lock` options: `--snapshot`, `--global`, `--no-context`, `--agents`
 
-`check` 选项：`--skip-audit`、`--skip-tests`、`--skip-validate`、`--skip-untracked`、`--skip-drift`、`--llm`
+`check` options: `--skip-audit`, `--skip-tests`, `--skip-validate`, `--skip-untracked`, `--skip-drift`, `--llm`
 
-## 安全与合规
+## Security and compliance
 
-| 命令 | 说明 |
-|------|------|
-| `audit` | 注入/混淆等安全扫描 |
-| `sbom` | JSON SBOM（`--format cyclonedx`） |
-| `test` | `skills.test.yaml` 契约测试（`--llm`） |
+| Command | Description |
+|---------|-------------|
+| `audit` | Security scan (injection, obfuscation, etc.) |
+| `sbom` | JSON SBOM (`--format cyclonedx`) |
+| `test` | Contract tests from `skills.test.yaml` (`--llm`) |
 
-## 复现与缓存
+## Reproduce and cache
 
-| 命令 | 说明 |
-|------|------|
-| `reproduce` | 从 source 安装 + snapshot 恢复 |
-| `snapshot` | 写入 `.skilllock/snapshots/` |
-| `cache list` | 查看 reproduce 缓存 |
-| `cache clear` | 清理缓存 |
-| `cache stats` | 缓存统计 |
+| Command | Description |
+|---------|-------------|
+| `reproduce` | Install from sources + restore snapshots |
+| `snapshot` | Write `.skilllock/snapshots/` |
+| `cache list` | List reproduce cache |
+| `cache clear` | Clear cache |
+| `cache stats` | Cache statistics |
 
-`reproduce` 选项：`--dry-run`、`--only rules|skills|context|mcp`、`--no-cache`、`--synthesize-apm`
+`reproduce` options: `--dry-run`, `--only rules|skills|context|mcp`, `--no-cache`, `--synthesize-apm`
 
-## 可观测性
+## Observability
 
-| 命令 | 说明 |
-|------|------|
-| `tree` | 依赖树 |
-| `graph` | Mermaid 依赖图（`--ascii` 同 tree） |
-| `why <skill>` | skill 来源与依赖关系 |
-| `untracked` | 磁盘上有但未进 lock 的 skills |
+| Command | Description |
+|---------|-------------|
+| `tree` | Dependency tree |
+| `graph` | Mermaid dependency graph (`--ascii` for text tree) |
+| `why <skill>` | Source and dependency info for a skill |
+| `untracked` | Skills on disk but not in the lock |
 
-## 升级
+## Upgrades
 
-| 命令 | 说明 |
-|------|------|
-| `outdated` | 对比远程 npm/git 版本 |
-| `upgrade` | 升级建议 |
-| `upgrade --apply` | 自动 bump source ref |
-| `upgrade --apply --reproduce --check` | bump + 安装 + 门禁 |
+| Command | Description |
+|---------|-------------|
+| `outdated` | Compare remote npm/git versions |
+| `upgrade` | Upgrade suggestions |
+| `upgrade --apply` | Bump source refs automatically |
+| `upgrade --apply --reproduce --check` | bump + install + gate |
 
 ## Exit codes
 
-| 命令 | 非零 exit |
-|------|-----------|
-| `verify` / `check` / `drift` | 存在问题或 drift |
-| `audit` | 按 `--fail-on` / policy |
-| `test` | 测试失败 |
-| `untracked` / `outdated` | 发现问题 |
-| `upgrade --apply` | verify/check 失败 |
+| Command | Non-zero when |
+|---------|----------------|
+| `verify` / `check` / `drift` | Issues or drift detected |
+| `audit` | Per `--fail-on` / policy |
+| `test` | Tests fail |
+| `untracked` / `outdated` | Issues found |
+| `upgrade --apply` | verify/check fails |
 
-## 环境变量（LLM test）
+## Environment variables (LLM test)
 
 - `SKILLLOCK_LLM_API_KEY` / `OPENAI_API_KEY`
 - `SKILLLOCK_LLM_BASE_URL`

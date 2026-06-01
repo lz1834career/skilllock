@@ -1,22 +1,24 @@
 # skilllock
 
+English | [简体中文](./README.zh-CN.md)
+
 Reproducible lockfiles, verification, diff, security audit, and contract tests for [Agent Skills](https://agentskills.io).
 
-APM、Vercel `skills`、skillpm 解决 **怎么装**；skilllock 解决 **装完之后怎么锁、怎么验、怎么 diff、怎么审计、怎么测、怎么复现、怎么升级**。
+APM, Vercel `skills`, and skillpm solve **how to install** skills; skilllock solves **how to lock, verify, diff, audit, test, reproduce, and upgrade** after install.
 
-**v1.1.0** — [npm](https://www.npmjs.com/package/skilllock) · [GitHub](https://github.com/lz1834career/skilllock) · CI 已通过
+**v1.1.0** — [npm](https://www.npmjs.com/package/skilllock) · [GitHub](https://github.com/lz1834career/skilllock)
 
-## 文档
+## Documentation
 
-| 文档 | 内容 |
-|------|------|
-| [docs/getting-started.md](./docs/getting-started.md) | 安装与五分钟工作流 |
-| [docs/commands.md](./docs/commands.md) | 完整命令参考 |
-| [docs/ecosystem.md](./docs/ecosystem.md) | 与 APM / skills / skillpm / sklock 的分工 |
-| [examples/demo-project](./examples/demo-project/README.md) | 可运行示例 |
-| [action/README.md](./action/README.md) | GitHub Action 用法 |
-| [RELEASING.md](./RELEASING.md) | 版本发布 checklist |
-| [CHANGELOG.md](./CHANGELOG.md) | 版本历史 |
+| Doc | Description |
+|-----|-------------|
+| [docs/getting-started.md](./docs/getting-started.md) | Install and five-minute workflow |
+| [docs/commands.md](./docs/commands.md) | Command reference |
+| [docs/ecosystem.md](./docs/ecosystem.md) | APM / skills / skillpm / sklock comparison |
+| [examples/demo-project](./examples/demo-project/README.md) | Runnable example |
+| [action/README.md](./action/README.md) | GitHub Action |
+| [RELEASING.md](./RELEASING.md) | Release checklist (maintainers) |
+| [CHANGELOG.md](./CHANGELOG.md) | Version history |
 
 ## Install
 
@@ -27,7 +29,7 @@ npx skilllock lock
 npx skilllock check
 ```
 
-或一次性运行（无需写入 `package.json`）：
+One-off (no `package.json` entry):
 
 ```bash
 npx skilllock@1.1.0 init
@@ -41,10 +43,12 @@ skilllock import          # optional: merge apm.yml / package.json sources
 skilllock lock --snapshot # optional: offline snapshots
 skilllock check           # CI gate
 skilllock reproduce       # fresh clone / new machine
-skilllock graph           # Mermaid 依赖图
+skilllock graph           # Mermaid dependency graph
 ```
 
 ## GitHub Action
+
+`skilllock init` scaffolds weekly drift and auto-upgrade workflows; add a PR check workflow manually (see [getting-started](./docs/getting-started.md#github-action)).
 
 ```yaml
 - uses: lz1834career/skilllock/action@v1.1.0
@@ -52,17 +56,17 @@ skilllock graph           # Mermaid 依赖图
     command: check
 ```
 
-## 与 sklock 怎么选？
+## skilllock vs sklock
 
-| 你更需要 | 选 |
-|---------|-----|
-| CI 门禁、reproduce、audit、MCP/Rules lock、升级 | **skilllock** |
-| 嵌套 `skills/*/skills/*` 目录 + closureHash | [sklock](https://github.com/artieax/sklock) |
-| 两者可组合：安装器装 skill → skilllock lock/check | 见 [docs/ecosystem.md](./docs/ecosystem.md) |
+| You need | Choose |
+|----------|--------|
+| CI gates, reproduce, audit, MCP/Rules lock, upgrades | **skilllock** |
+| Nested `skills/*/skills/*` layout + closureHash | [sklock](https://github.com/artieax/sklock) |
+| Both | Install with an installer → `skilllock lock` / `check` — see [ecosystem](./docs/ecosystem.md) |
 
-skilllock 采用 **平铺目录**（`.cursor/skills/<name>/`）+ frontmatter **`metadata.skilllock.dependencies`** 声明依赖，不做 filesystem 嵌套发现。
+skilllock uses a **flat layout** (`.cursor/skills/<name>/`) and **`metadata.skilllock.dependencies`** in frontmatter; it does not discover nested filesystem trees.
 
-## Lockfile v2（摘要）
+## Lockfile v2 (summary)
 
 ```yaml
 lockfileVersion: 2
@@ -77,7 +81,7 @@ context:
     files: [...]
 ```
 
-## 从源码开发（贡献者）
+## Develop from source
 
 ```bash
 git clone https://github.com/lz1834career/skilllock.git

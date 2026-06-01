@@ -1,65 +1,76 @@
-# 快速开始
+# Getting started
 
-## 安装
+## Install
 
-推荐通过 npm（[skilllock@1.1.0](https://www.npmjs.com/package/skilllock)）：
+Recommended via npm ([skilllock@1.1.0](https://www.npmjs.com/package/skilllock)):
 
 ```bash
 npm install -D skilllock
 npx skilllock --help
 ```
 
-无需安装到项目时：
+Without adding to `package.json`:
 
 ```bash
 npx skilllock@1.1.0 init
 npx skilllock@1.1.0 lock
 ```
 
-## 五分钟工作流
+## Five-minute workflow
 
 ```bash
-# 1. 初始化配置模板
+# 1. Scaffold policy, tests, sources, gitignore, workflow templates
 skilllock init
 
-# 2. 导入 source 映射（可选）
+# 2. Import source mappings (optional)
 skilllock import
 
-# 3. 扫描已安装 skills
+# 3. List installed skills
 skilllock scan
 
-# 4. 生成 lockfile
+# 4. Generate lockfile
 skilllock lock
 
-# 5. CI 门禁
+# 5. CI gate
 skilllock check
 ```
 
-## 新机器 / 新同事复现
+## Reproduce on a new machine
 
 ```bash
 git clone <repo>
 cd project
-npm install   # 若 skilllock 在 devDependencies
+npm install   # if skilllock is in devDependencies
 skilllock reproduce
 skilllock verify
 ```
 
-离线环境：在有网机器 `skilllock lock --snapshot`，提交 `.skilllock/snapshots/` 后 `skilllock reproduce`。
+Offline: on a connected machine run `skilllock lock --snapshot`, commit `.skilllock/snapshots/`, then `skilllock reproduce` offline.
 
 ## GitHub Action
 
+Add this workflow for PR/push checks (`init` does **not** create it; it only scaffolds weekly drift and auto-upgrade workflows):
+
 ```yaml
-- uses: lz1834career/skilllock/action@v1.1.0
-  with:
-    command: check
+name: skilllock-check
+on: [pull_request, push]
+
+jobs:
+  skilllock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lz1834career/skilllock/action@v1.1.0
+        with:
+          command: check
+          skip-tests: "true"   # remove when skills.test.yaml has cases
 ```
 
-Monorepo 见 `examples/demo-project/.github/workflows/skilllock-ci.yml`。
+Monorepo example: `examples/demo-project/.github/workflows/skilllock-ci.yml`.
 
-## 策略文件
+## Policy file
 
-`skilllock init` 生成 `skilllock.policy.yaml`：
+`skilllock init` writes `skilllock.policy.yaml`:
 
 ```yaml
 drift:
@@ -71,7 +82,7 @@ audit:
   denyRules: [hidden-instruction, unicode-obfuscation]
 ```
 
-## 从源码开发 skilllock
+## Develop skilllock from source
 
 ```bash
 git clone https://github.com/lz1834career/skilllock.git
@@ -82,7 +93,7 @@ npm install -g .
 skilllock --version
 ```
 
-## 下一步
+## Next steps
 
-- 完整命令列表：[commands.md](./commands.md)
-- 与 APM / skills CLI 的分工：[ecosystem.md](./ecosystem.md)
+- [Command reference](./commands.md)
+- [Ecosystem comparison](./ecosystem.md)
