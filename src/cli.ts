@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import pc from "picocolors";
 import { auditExitCode, auditSkills } from "./core/audit.js";
 import { checkCompatibility, checkDependencies, checkPolicySkills } from "./core/compatibility.js";
@@ -57,6 +58,12 @@ import {
 } from "./utils/format.js";
 
 const program = new Command();
+
+async function readPackageVersion(): Promise<string> {
+  const rootDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const pkg = JSON.parse(await readFile(path.join(rootDir, "package.json"), "utf8")) as { version: string };
+  return pkg.version;
+}
 
 function parseAgents(value: string): SkillAgent[] {
   return value
@@ -141,6 +148,9 @@ mappings: []
       console.log(pc.green("✓ wrote .gitignore"));
     }
 
+    const skilllockVersion = await readPackageVersion();
+    const actionRef = `lz1834career/skilllock/action@v${skilllockVersion}`;
+
     const weeklyWorkflow = path.join(projectRoot, ".github", "workflows", "skilllock-weekly.yml");
     const autoUpgradeWorkflow = path.join(projectRoot, ".github", "workflows", "skilllock-auto-upgrade.yml");
     const workflowContent = `name: skilllock-drift
@@ -159,25 +169,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install skilllock
-        run: npm install -g .
-
       - name: Run drift
         id: drift
         continue-on-error: true
-        run: skilllock drift 2>&1 | tee skilllock-drift.log
+        uses: ${actionRef}
+        with:
+          command: drift
 
       - name: Open issue on drift
         if: steps.drift.outcome == 'failure'
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const body = fs.readFileSync('skilllock-drift.log', 'utf8');
+            const runUrl = \`\${context.serverUrl}/\${context.repo.owner}/\${context.repo.repo}/actions/runs/\${context.runId}\`;
+            const body = \`Automated drift report from [workflow run](\${runUrl}).\\n\\nRun \\\`skilllock lock\\\` after review, or \\\`skilllock reproduce\\\` to restore.\`;
             const title = \`skilllock drift detected (\${new Date().toISOString().slice(0, 10)})\`;
             const existing = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
@@ -192,7 +197,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 title,
-                body: \`Automated drift report:\\n\\n\\\`\\\`\\\`\\n\${body}\\n\\\`\\\`\\\`\\n\\nRun \\\`skilllock lock\\\` after review, or \\\`skilllock reproduce\\\` to restore.\`,
+                body: \`Automated drift report:\\n\\n\${body}\`,
                 labels: ['skilllock-drift'],
               });
             }
@@ -218,18 +223,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: ${actionRef}
         with:
-          node-version: 20
-
-      - name: Install skilllock
-        run: npm install -g .
-
-      - name: Preview upgrades
-        run: skilllock upgrade --json
-
-      - name: Apply upgrades
-        run: skilllock upgrade --apply --reproduce --check
+          command: upgrade
+          apply-upgrades: "true"
+          reproduce: "true"
+          run-check: "true"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7

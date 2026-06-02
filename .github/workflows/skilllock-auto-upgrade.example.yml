@@ -1,8 +1,9 @@
+# Example only — copy to skilllock-auto-upgrade.yml and uncomment schedule to enable.
 name: skilllock-auto-upgrade
 
 on:
-  schedule:
-    - cron: "0 10 * * 1"
+  # schedule:
+  #   - cron: "0 10 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -15,18 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: ./action
         with:
-          node-version: 20
-
-      - name: Install skilllock
-        run: npm install -g .
-
-      - name: Preview upgrades
-        run: skilllock upgrade --json
-
-      - name: Apply upgrades
-        run: skilllock upgrade --apply --reproduce --check
+          command: upgrade
+          apply-upgrades: "true"
+          reproduce: "true"
+          run-check: "true"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
